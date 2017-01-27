@@ -35,6 +35,7 @@ if( ! defined( 'ABSPATH' ) ) { exit; }
 if( defined( 'BANANAS' ) ) { exit; }
 if( isset( $bananas ) ) { exit; }
 
+// Our master plugin object, which will own instances of various classes in our plugin.
 $bananas = new stdClass;
 
 // A slug for our plugin.
@@ -50,4 +51,5 @@ define( 'BANANAS_PATH', trailingslashit( plugin_dir_path( BANANAS_FILE ) ) );
 // A constant to define the urls to our plugin folders.
 define( 'BANANAS_URL', trailingslashit( plugin_dir_url( BANANAS_FILE ) ) );
 
+// A class for loading our plugin files.
 require_once( BANANAS_PATH . 'inc/class.bootstrap.php' );

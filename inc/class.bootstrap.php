@@ -23,9 +23,9 @@ class Bootstrap {
 	}
 	
 	/**
-	 * If this plugin does not have all of its dependencies, it refuses to load its files.
+	 * Load our plugin files.
 	 * 
-	 * @return boolean Returns FALSE if it's missing dependencies, else TRUE.
+	 * @return boolean Returns FALSE if it loads all of its files, else TRUE.
 	 */
 	function load() {
 
@@ -40,14 +40,20 @@ class Bootstrap {
 
 	}
 
+	/**
+	 * Instantiate and store a bunch of our plugin classes.
+	 */
 	function create() {
 
 		global $bananas;
 
 		$bananas -> meta                  = new Meta;
 		$bananas -> settings              = new Settings;
+		$bananas -> enqueue               = new Enqueue;		
 		$bananas -> subsite_control_panel = new Subsite_Control_Panel;
 		$bananas -> dashboard_widget      = new Dashboard_Widget;
+
+		return $bananas;
 
 	}
 

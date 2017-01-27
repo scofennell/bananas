@@ -12,3 +12,5 @@
  * @type {Object}
  */
 var Bananas = {};
+
+alert( Bananas );
