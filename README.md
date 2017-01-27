@@ -1,2 +1,2 @@
-# clinic
-A WordPress plugin for running a medical clinic.
+# bananas
+A WordPress plugin for integrating with MailChimp.
