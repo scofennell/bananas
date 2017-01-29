@@ -118,7 +118,7 @@ class Subsite_Control_Panel {
 	function get_form() {
 
 		// Get the definition of our settings.
-		$get_settings = this -> settings -> get_settings();
+		$get_settings = $this -> settings -> get_settings();
 
 		// Will hold form fields.
 		$out = '';
