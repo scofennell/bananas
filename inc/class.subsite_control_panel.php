@@ -126,15 +126,11 @@ class Subsite_Control_Panel {
 		// Start an output buffer since some of these functions always echo.
 		ob_start();
 
-		foreach( $get_settings as $section_id => $section ) {
+		// Dump the nonce and some other hidden form stuff into the OB.
+		settings_fields( BANANAS );
 
-			// Dump the nonce and some other hidden form stuff into the OB.
-			settings_fields( BANANAS );
-
-			// Dump the form inputs into the OB.
-			do_settings_sections( BANANAS );
-
-		}
+		// Dump the form inputs into the OB.
+		do_settings_sections( BANANAS );
 
 		// Grab the stuff from the OB, clean the OB.
 		$form_fields = ob_get_clean();
