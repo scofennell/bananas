@@ -15,7 +15,7 @@ abstract class Resource {
 	function __construct( $args = array() ) {
 
 		// Store the endpoint to which we're making api calls.
-		$this -> set_slug();
+		$this -> set_endpoint();
 
 		// Store the args that were passed in.
 		$this -> set_args( $args );
@@ -27,9 +27,9 @@ abstract class Resource {
 	 * 
 	 * @return string The endpoint to which we're making API calls.
 	 */
-	function get_slug() {
+	function get_endpoint() {
 
-		return $this -> slug;
+		return $this -> endpoint;
 
 	}
 
@@ -50,12 +50,25 @@ abstract class Resource {
 	function get_response() {
 
 		$args = array(
-			'resource' => $this -> get_slug(),
+			'endpoint' => $this -> get_endpoint(),
 		);
 
 		$call = new Call( $args );
 
 		return $call -> get_response();
+
+	}
+
+	/**
+	 * Get the total number of items in an endpoint.
+	 * 
+	 * @return integer The total number of items in an endpoint.
+	 */
+	function get_total_items() {
+
+		$response = $this -> get_response();
+
+		return $response['total_items'];
 
 	}
 

@@ -18,6 +18,8 @@ class Dashboard_Widget {
 		global $bananas;
 		$this -> meta = $bananas -> meta;
 
+		$this -> lists = new Lists;
+
 		add_action( 'wp_dashboard_setup', array( $this, 'wp_dashboard_setup' ) );
 
 	}
@@ -43,7 +45,7 @@ class Dashboard_Widget {
 		if( is_wp_error( $this -> is_setup() ) ) { return FALSE; }
 
 		$widget_id        = BANANAS;
-		$widget_name      = esc_html__( 'Your MailChimp Stats', 'bananas' );
+		$widget_name      = $this -> get_the_title();
 		$callback         = array( $this, 'cb' );
 		$control_callback = FALSE;
 		$callback_args    = FALSE;
@@ -55,6 +57,20 @@ class Dashboard_Widget {
             $control_callback,
             $callback_args
         );	
+
+	}
+
+	function get_the_title() {
+
+		$root = new Root;
+		$total_subscribers = '<code>' . $root -> get_total_subscribers() . '</code>';
+		
+		$total_lists = '<code>' . $this -> lists -> get_total_items() . '</code>';
+		
+
+		$out = sprintf( esc_html__( 'Total Subscribers: %s from %s Lists', 'bananas' ), $total_subscribers, $total_lists );
+
+		return $out;
 
 	}
 
@@ -75,8 +91,7 @@ class Dashboard_Widget {
 	function get_content() {
 
 		// Make a graph of our MailChimp list stats.
-		$lists = new Lists();
-		$graph = $lists -> get_graph();
+		$graph = $this -> lists -> get_graph();
 
 		return $graph;
 

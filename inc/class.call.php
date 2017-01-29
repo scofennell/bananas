@@ -38,7 +38,7 @@ class Call {
 		$this -> set_method();	
 		
 		// Store the API endpoint.
-		$this -> set_resource();
+		$this -> set_endpoint();
 
 		// Store the params that we want to pass to MailChimp.
 		$this -> set_params();
@@ -196,23 +196,23 @@ class Call {
 	 * 
 	 * @return string The endpoint for this request.
 	 */
-	function get_resource() {
+	function get_endpoint() {
 
-		return $this -> resource;
+		return $this -> endpoint;
 
 	}
 
 	/**
-	 * Store the resource for this request.
+	 * Store the endpoint for this request.
 	 */
-	function set_resource() {
+	function set_endpoint() {
 
-		$resource = '';
-		if( isset( $this -> args['resource'] ) ) {
-			$resource = $this -> args['resource'];
+		$endpoint = '';
+		if( isset( $this -> args['endpoint'] ) ) {
+			$endpoint = $this -> args['endpoint'];
 		}
 		
-		$this -> resource = $resource;
+		$this -> endpoint = $endpoint;
 
 	}		
 
@@ -300,7 +300,7 @@ class Call {
 
 		$out  = trailingslashit( $this -> get_base() );
 
-		$out .= trailingslashit( $this -> get_resource() );
+		$out .= trailingslashit( $this -> get_endpoint() );
 
 		if( $this -> method == 'GET' ) {
 

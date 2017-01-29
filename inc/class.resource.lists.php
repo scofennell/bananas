@@ -21,9 +21,9 @@ class Lists extends Resource {
 	/**
 	 * The endpoint in the MailChimp API.
 	 */
-	function set_slug() {
+	function set_endpoint() {
 
-		$this -> slug = 'lists';
+		$this -> endpoint = 'lists';
 
 	}
 
@@ -40,7 +40,7 @@ class Lists extends Resource {
 
 		// Set up the args for our graph.
 		$args = array(
-			'title' => esc_html__( 'Your Subscribers', 'bananas' ),
+			'title' => esc_html__( 'Subscriber Count by List', 'bananas' ),
 			'values' => array(),
 		);
 

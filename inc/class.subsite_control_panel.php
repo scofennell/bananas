@@ -319,7 +319,7 @@ class Subsite_Control_Panel {
 					}
 				}
 
-				$attrs = $this -> array_to_attrs( $setting['attrs'] );
+				$attrs = $this -> get_attrs_from_array( $setting['attrs'] );
 
 				$out = "
 					<input $attrs class='regular-text' type='$type' id='$id' name='$name' value='$value'>
@@ -340,7 +340,7 @@ class Subsite_Control_Panel {
 	 * @param  array $array An associative array.
 	 * @return string       HTML attributes.
 	 */
-	function array_to_attrs( $array ) {
+	function get_attrs_from_array( $array ) {
 
 		$out = '';
 
@@ -364,6 +364,10 @@ class Subsite_Control_Panel {
 	 * @return array  The form values, clean.
 	 */
 	public function sanitize( $dirty = array() ) {
+
+		// Upon saving settings, we dump our transients.
+		$t = new Transients;
+		$t -> delete();
 
 		// Will hold cleaned values.
 		$clean = array();

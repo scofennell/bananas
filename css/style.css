@@ -15,75 +15,86 @@
  * 1. Graphs
  */
 
-.BananasGraph-get {
-    background-color: #fff;
-    background-image:linear-gradient(#fff, #ccc);
-}
+ 	/**
+ 	 * The wrapper for the entire graph.
+ 	 */
+	.BananasGraph-get {
+	    background-color: #fff;
+	    background-image: linear-gradient(
+	    	#fff,
+	    	#ccc
+	    );
+	}
 
-.BananasGraph-get-bars {
-	padding: .5em;
-	border: 1px solid #ccc;
+ 	/**
+ 	 * The wrapper for the graph bars.
+ 	 */
+	.BananasGraph-get-bars {
+		background-color: transparent;
+	    background-image:
+	    	linear-gradient(
+		    	0deg,
+		    	transparent 24%,
+		    	rgba( 0, 0, 0, .05 ) 25%,
+		    	rgba( 0, 0, 0, .05 ) 26%,
+		    	transparent 27%,
+		    	transparent 74%, 
+		    	rgba( 0, 0, 0, .05 ) 75%, 
+		    	rgba( 0, 0, 0, .05 ) 76%,
+		    	transparent 77%,
+		    	transparent
+		    ),
+		    linear-gradient(
+		    	90deg, 
+		    	transparent 24%, 
+		    	rgba( 0, 0, 0, .05 ) 25%, 
+		    	rgba( 0, 0, 0, .05 ) 26%, 
+		    	transparent 27%, 
+		    	transparent 74%, 
+		    	rgba( 0, 0, 0, .05 ) 75%, 
+		    	rgba( 0, 0, 0, .05 ) 76%, 
+		    	transparent 77%, 
+		    	transparent
+		    )
+		;
+		background-size: 4em 4em;
+		border: 1px solid #ccc;
+		height: 100%;
+		padding: .5em;
+	}
 
-	background-color: transparent;
+	/**
+	 * Each graph entry.
+	 */
+	.BananasGraph-get-bar { margin-bottom: 2em; }
+	.BananasGraph-get-bar:last-child { margin-bottom: 0; }
 
-    background-image: linear-gradient(
-    	0deg,
-    	transparent 24%,
-    	rgba(0, 0, 0, .05) 25%,
-    	rgba(0, 0, 0, .05) 26%,
-    	transparent 27%,
-    	transparent 74%, 
-    	rgba(0, 0, 0, .05) 75%, 
-    	rgba(0, 0, 0, .05) 76%,
-    	transparent 77%,
-    	transparent
-    ),
-    linear-gradient(
-    	90deg, 
-    	transparent 24%, 
-    	rgba(0, 0, 0, .05) 25%, 
-    	rgba(0, 0, 0, .05) 26%, 
-    	transparent 27%, 
-    	transparent 74%, 
-    	rgba(0, 0, 0, .05) 75%, 
-    	rgba(0, 0, 0, .05) 76%, 
-    	transparent 77%, 
-    	transparent
-    );
-	
-	height:100%;
-	
-	background-size: 50px 50px;
+	/**
+	 * The bar portion of the entry.
+	 */
+	.BananasGraph-get-bar-rectangle {
+		background-image: linear-gradient(
+			0deg,
+	    	#ccc,
+	    	#fff
+	    );
+	    border: 1px solid rgba( 0, 0, 0, .5 );
+		border-radius: 0 5px 5px 0;
+		display: block;
+		height: 2em;
+		position: relative;
+	}
 
-}
-
-.BananasGraph-get-bar {
-	margin-bottom: 2em;
-}
-
-.BananasGraph-get-bar:last-child {
-	margin-bottom: 0;
-}
-
-.BananasGraph-get-bar-rectangle {
-	display: block;
-	height: 2em;
-	background: #000;
-	position: relative;
-}
-
-.BananasGraph-get-bar-rectangle-value {
-	font-size: 1em;
-	line-height: 1em;
-	font-style: italic;
-	font-family: monospace;
-	position: absolute;
-	left: .5em;
-	top: .65em;
-	color: #fff;
-	text-shadow:
-	-1px -1px 0 #000,  
-	1px -1px 0 #000,
-	-1px 1px 0 #000,
-	1px 1px 0 #000;
-}
+	/**
+	 * The value of the entry.
+	 */
+	.BananasGraph-get-bar-rectangle-value {
+		font-family: monospace;
+		font-size: 1em;
+		font-style: italic;
+		line-height: 1em;
+		position: absolute;
+		left: .5em;
+		text-shadow: 1px 1px 0 #fff;
+		top: .65em;
+	}
