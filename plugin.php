@@ -36,7 +36,7 @@ if( defined( 'BANANAS' ) ) { exit; }
 if( isset( $bananas ) ) { exit; }
 
 // Our master plugin object, which will own instances of various classes in our plugin.
-$bananas = new stdClass;
+$bananas = FALSE;
 
 // A slug for our plugin.
 define( 'BANANAS', 'bananas' );
