@@ -219,11 +219,11 @@ class Subsite_Control_Panel {
 				// The cb to draw the input for this setting.
 				$callback = array( $this, 'the_field' );
 
-				/**
-				 * $args to pass to $callback.
-				 * We'll pass it the setting as an array member of the settings section.
-				 */
-				$args[ $section_id ][ $setting_id ] = $setting;
+				$args = array(
+					'section_id' => $section_id,
+					'setting_id' => $setting_id,
+					'setting'    => $setting,
+				);
 
 				// Add the settings field.
 				add_settings_field(
@@ -289,46 +289,35 @@ class Subsite_Control_Panel {
 	 */
 	public function get_field( $args = array() ) {
 
+		$section_id = $args['section_id'];
+		$setting_id = $args['setting_id'];		
+		$setting    = $args['setting'];
+
 		// Get our plugin option.  We'll need it to prepopulate the form fields.
 		$values = $this -> settings -> get_subsite_values();
 
-		// For each settings section...
-		foreach( $args as $section_id => $settings ) {
+		// It's probably a textarea!
+		$type = $setting['type'];
 
-			// For each setting...
-			foreach( $settings as $setting_id => $setting ) {
+		// The ID for the input, expected by the <label for=''> that get's printed via do_settings_sections().
+		$id = BANANAS . "-$section_id-$setting_id";
 
-				// It's probably a textarea!
-				$type = $setting['type'];
+		$description = $setting['description'];
 
-				// The ID for the input, expected by the <label for=''> that get's printed via do_settings_sections().
-				$id = BANANAS . "-$section_id-$setting_id";
+		/**
+		 * The name of this setting.
+		 * It's a member of the section array, which in turn is a member of the plugin array.
+		 */
+		$name = BANANAS . '[' . $section_id . ']' . '[' . $setting_id . ']';			
+		
+		$value = esc_attr( $this -> settings -> get_subsite_value( $section_id, $setting_id ) );
 
-				$description = $setting['description'];
+		$attrs = $this -> get_attrs_from_array( $setting['attrs'] );
 
-				/**
-				 * The name of this setting.
-				 * It's a member of the section array, which in turn is a member of the plugin array.
-				 */
-				$name = BANANAS . '[' . $section_id . ']' . '[' . $setting_id . ']';			
-				
-				$value = '';
-				if( isset( $values[ $section_id ] ) ) {
-					if( isset( $values[ $section_id ][ $setting_id ] ) ) {
-						$value = esc_attr( $values[ $section_id ][ $setting_id ] );
-					}
-				}
-
-				$attrs = $this -> get_attrs_from_array( $setting['attrs'] );
-
-				$out = "
-					<input $attrs class='regular-text' type='$type' id='$id' name='$name' value='$value'>
-					<p class='description'>$description</p>
-				";
-
-			}
-
-		}
+		$out = "
+			<input $attrs class='regular-text' type='$type' id='$id' name='$name' value='$value'>
+			<p class='description'>$description</p>
+		";
 
 		return $out;
 
