@@ -47,7 +47,7 @@ class Bootstrap {
 
 		global $bananas;
 
-		$bananas = new stdClass();
+		$bananas = new \stdClass();
 
 		$bananas -> meta                  = new Meta;
 		$bananas -> settings              = new Settings;
