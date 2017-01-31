@@ -59,6 +59,10 @@ class Subsite_Control_Panel {
 	 */
 	function is_current_page() {
 
+		if( is_multisite() ) {
+			if( is_network_admin() ) { return FALSE; }
+		}
+
 		global $pagenow;
 
 		// If we're not in either of these two, bail.  options.php is required for form handling.
@@ -139,9 +143,6 @@ class Subsite_Control_Panel {
 	 * @return string The settings form.
 	 */
 	function get_form() {
-
-		// Get the definition of our settings.
-		$get_settings = $this -> settings -> get_settings();
 
 		// Will hold form fields.
 		$out = '';

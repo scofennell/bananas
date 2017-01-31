@@ -129,9 +129,6 @@ class Network_Control_Panel {
 	 */
 	function get_form() {
 
-		// Get the definition of our settings.
-		$get_settings = $this -> settings -> get_settings();
-
 		// Will hold form fields.
 		$out = '';
 
@@ -217,10 +214,10 @@ class Network_Control_Panel {
 		if( ! $this -> is_current_page() ) { return FALSE; }
 
 		// Grab our plugin settings definition.
-		$subsite_settings = $this -> settings -> get_subsite_settings();
+		$network_settings = $this -> settings -> get_network_settings();
 
 		// For each section of settings...
-		foreach( $subsite_settings as $section_id => $section ) {
+		foreach( $network_settings as $section_id => $section ) {
 
 			// Grab the label.
 			$section_label = $section['label'];

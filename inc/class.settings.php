@@ -99,23 +99,11 @@ class Settings {
 				'settings' => array(
 
 					// A setting.
-					'other_setting1' => array(
-						'subsite'     => FALSE,
-						'network'     => FALSE,
-						'type'        => 'text',
-						'label'       => esc_html__( 'Should not appear anywhere', 'bananas' ),
-						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
-						'attrs'       => array(
-							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
-						),
-					),	
-
-					// A setting.
 					'other_setting2' => array(
 						'subsite'     => TRUE,
 						'network'     => FALSE,
 						'type'        => 'text',
-						'label'       => esc_html__( 'Should only appeadr on subsite', 'bananas' ),
+						'label'       => esc_html__( 'Should only appear on subsite (other_setting2)', 'bananas' ),
 						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
 						'attrs'       => array(
 							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
@@ -127,7 +115,31 @@ class Settings {
 						'subsite'     => FALSE,
 						'network'     => TRUE,
 						'type'        => 'text',
-						'label'       => esc_html__( 'Should only appeadr on network', 'bananas' ),
+						'label'       => esc_html__( 'Should only appear on network (other_setting3)', 'bananas' ),
+						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
+						),
+					),	
+
+					// A setting.
+					'other_setting0' => array(
+						'subsite'     => TRUE,
+						'network'     => TRUE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Should appear on both (other_setting0)', 'bananas' ),
+						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
+						),
+					),	
+
+					// A setting.
+					'other_setting1' => array(
+						'subsite'     => FALSE,
+						'network'     => FALSE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Should not appear anywhere (other_setting1)', 'bananas' ),
 						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
 						'attrs'       => array(
 							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
@@ -233,6 +245,43 @@ class Settings {
 	}	
 
 	/**
+	 * Get the definition of our network settings.
+	 * 
+	 * @return array The definition of our network settings.
+	 */
+	function get_network_settings() {
+
+		// Start with all settings.
+		$settings = $this -> get_settings();
+
+		$out = array();
+
+		// For each setting...
+		foreach( $settings as $section_id => $section ) {
+
+			// If it's not a network section, remove it.
+			if( ! $section['network'] ) { continue; }
+
+			$out[ $section_id ] = $section;
+			$out[ $section_id ]['settings'] = array();
+
+			foreach( $section['settings'] as $setting_id => $setting ) {
+			
+				// If it's not a network setting, remove it.
+				if( ! $setting['network'] ) { continue; }
+
+				$out[ $section_id ]['settings'][ $setting_id ] = $setting;
+
+
+			}
+
+		}
+
+		return $out;
+
+	}
+
+	/**
 	 * Get the definition of our subsite settings.
 	 * 
 	 * @return array The definition of our subsite settings.
@@ -242,17 +291,30 @@ class Settings {
 		// Start with all settings.
 		$settings = $this -> get_settings();
 
+		$out = array();
+
 		// For each setting...
 		foreach( $settings as $section_id => $section ) {
 
-			// If it's not a subsite setting, remove it.
-			if( ! $section['subsite'] ) {
-				unset( $settings[ $section_id] );
+			// If it's not a subsite section, remove it.
+			if( ! $section['subsite'] ) { continue; }
+
+			$out[ $section_id ] = $section;
+			$out[ $section_id ]['settings'] = array();
+
+			foreach( $section['settings'] as $setting_id => $setting ) {
+			
+				// If it's not a subsite setting, remove it.
+				if( ! $setting['subsite'] ) { continue; }
+
+				$out[ $section_id ]['settings'][ $setting_id ] = $setting;
+
+
 			}
 
 		}
 
-		return $settings;
+		return $out;
 
 	}
 
@@ -266,6 +328,14 @@ class Settings {
 	function get_subsite_value( $section_id, $setting_id ) {
 
 		$values = $this -> get_subsite_values();
+
+		if( ! isset( $values[ $section_id ] ) ) {
+			return FALSE;
+		}
+
+		if( ! isset( $values[ $section_id ][ $setting_id ] ) ) {
+			return FALSE;
+		}	
 
 		return $values[ $section_id ][ $setting_id ];
 
@@ -286,9 +356,10 @@ class Settings {
 			return FALSE;
 		}
 
-		if( ! isset( $values[ $setting_id ] ) ) {
+		
+		if( ! isset( $values[ $section_id ] [ $setting_id ] ) ) {
 			return FALSE;
-		}		
+		}
 
 		return $values[ $section_id ][ $setting_id ];
 
@@ -320,17 +391,30 @@ class Settings {
 
 					$out[ $old_section_id ][ $old_setting_id ] = $new_values[ $old_section_id ][ $old_setting_id ];
 
+				}
+		
+			}
 
+			foreach( $new_values as $new_section_id => $new_settings ) {
+				
+				foreach( $new_settings as $new_setting_id => $new_setting_value ) {
+
+					if( isset( $out[ $new_section_id ][ $new_setting_id ] ) ) { continue; }
+
+					$out[ $new_section_id ][ $new_setting_id ] = $new_values[ $new_section_id ][ $new_setting_id ];
 
 				}
 		
 			}
 		
 		}
+
 		
 		$this -> network_values = $out;
 
-		return update_site_option( BANANAS, $out );
+		$update = update_site_option( BANANAS, $out );
+
+		return $update;
 
 	}
 
