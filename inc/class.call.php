@@ -85,7 +85,7 @@ class Call {
 	 */
 	function set_api_key() {
 
-		$this -> api_key = $this -> settings -> get_subsite_value( 'mailchimp_account_setup', 'api_key' );
+		$this -> api_key = $this -> meta -> get_api_key( 'mailchimp_account_setup', 'api_key' );
 
 	}
 
@@ -408,6 +408,11 @@ class Call {
 	 * Store the result of our API call.
 	 */
 	function set_response() {
+
+		if( empty( $this -> get_api_key() ) ) {
+			$this -> response = new \WP_Error( 'api_key', __( 'Please provide an API Key.' ) );
+			return;
+		}
 
 		// If it's a GET request, we can look for a cached version.
 		$method = $this -> get_method();

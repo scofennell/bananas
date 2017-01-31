@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Subsite_Control_Panel {
+class Network_Control_Panel {
 
 	function __construct() {
 
@@ -20,20 +20,21 @@ class Subsite_Control_Panel {
 		$this -> settings = $bananas -> settings;
 
 		// Add our options page to wp-admin.
-		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
+		add_action( 'network_admin_menu', array( $this, 'add_options_page' ) );
 
 		// Register our options sections.
 		add_action( 'admin_init', array( $this, 'register' ) );
+		add_action( 'admin_init', array( $this, 'handle' ) );
 
 		// Register our admin notices.
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 
 	}
 
 	/**
-	 * Get the slug for the parent page of our settings page.
+	 * Get the slug of the parent page for our settings page.
 	 * 
-	 * @return string The slug for the parent page of our settings page.
+	 * @return string The slug of the parent page for our settings page.
 	 */
 	function get_parent_slug() {
 
@@ -42,35 +43,21 @@ class Subsite_Control_Panel {
 	}
 
 	/**
-	 * Get the slug for the form handler of our settings page.
-	 * 
-	 * @return string The slug for the form handler of our settings page.
-	 */
-	function get_handler_slug() {
-
-		return 'options.php';
-
-	}	
-
-	/**
 	 * Determine if we are on the settings page.
 	 * 
 	 * @return boolean Returns TRUE if we are on the settings page, else FALSE.
 	 */
 	function is_current_page() {
 
+		if( ! is_network_admin() ) { return FALSE; }
+
 		global $pagenow;
 
-		// If we're not in either of these two, bail.  options.php is required for form handling.
-		if( ( $pagenow != $this -> get_parent_slug() ) && ( $pagenow != $this -> get_handler_slug() ) ) { return FALSE; }
+		if( $pagenow != $this -> get_parent_slug() ) { return FALSE; }
 
-		if( $pagenow == $this -> get_parent_slug() ) {
+		if( ! isset( $_GET['page'] ) ) { return FALSE; }
 
-			if( ! isset( $_GET['page'] ) ) { return FALSE; }
-
-			if( $_GET['page'] != BANANAS ) { return FALSE; }
-
-		} 
+		if( $_GET['page'] != BANANAS ) { return FALSE; }
 
 		return TRUE;
 
@@ -88,6 +75,7 @@ class Subsite_Control_Panel {
 		$function   = array( $this, 'the_page' );
 		$icon_url   = 'dashicons-email';
 		$position   = 100;
+
 
 		$out = add_menu_page(
 			$page_title,
@@ -161,17 +149,35 @@ class Subsite_Control_Panel {
 		// Grab a submit button.
 		$submit = $this -> get_submit_button();
 
-		$handler_slug = admin_url( $this -> get_handler_slug() );
+		$url = $this -> get_network_admin_url();
+
+		$nonce = wp_nonce_field( 'update_network_settings', BANANAS  . '-nonce', TRUE, FALSE );
 
 		// Nice!  Time to build the page!
 		$out = "
-			<form method='POST' action='$handler_slug'>
+			<form method='POST' action='$url'>
+				$nonce
 				$form_fields
 				$submit
 			</form>
 		";
 
 		return $out;
+
+	}
+
+	public function handle() {
+
+		if( ! isset( $_POST['option_page'] ) ) { return FALSE; }
+		if( ! isset( $_POST['submit'] ) ) { return FALSE; }
+		if( ! isset( $_POST[ BANANAS ] ) ) { return FALSE; }
+		if( ! $this -> is_current_page() ) { return FALSE; }
+
+		if ( ! isset($_POST[ BANANAS . '-nonce' ] ) ) { return FALSE; }
+		if ( empty($_POST[ BANANAS . '-nonce' ] ) ) { return FALSE; }
+		if( ! wp_verify_nonce( $_POST[ BANANAS . '-nonce' ], 'update_network_settings' ) ) { return FALSE; }
+
+		return $this -> settings -> update_network_values( $_POST[ BANANAS ] );
 
 	}
 
@@ -332,7 +338,7 @@ class Subsite_Control_Panel {
 		 */
 		$name = BANANAS . '[' . $section_id . ']' . '[' . $setting_id . ']';			
 		
-		$value = esc_attr( $this -> settings -> get_subsite_value( $section_id, $setting_id ) );
+		$value = esc_attr( $this -> settings -> get_network_value( $section_id, $setting_id ) );
 
 		$attrs = $this -> get_attrs_from_array( $setting['attrs'] );
 
@@ -410,8 +416,10 @@ class Subsite_Control_Panel {
 	 */
 	function get_admin_notices() {
 
+		$is_setup = $this -> is_setup();
+
 		// If the plugin is all set up, say so.
-		if( $this -> is_setup() ) {
+		if( ! is_wp_error( $is_setup ) ) {
 
 			$message = esc_html__( 'Nice!  Your API Key is valid.', 'bananas' );
 			$type = 'success';
@@ -419,7 +427,7 @@ class Subsite_Control_Panel {
 		// Else, issue a warning.
 		} else {
 
-			$message = esc_html__( 'Please provide a valid API Key.', 'bananas' );
+			$message = $is_setup -> get_error_message();
 			$type = 'warning';
 
 		}
@@ -454,9 +462,15 @@ class Subsite_Control_Panel {
 
 		$has_api_key = $this -> meta -> has_api_key();
 
-		if( is_wp_error( $has_api_key ) ) { return FALSE; }
+		if( is_wp_error( $has_api_key ) ) { return $has_api_key; }
 
 		return TRUE;
+
+	}
+
+	function get_network_admin_url() {
+
+		return network_admin_url( $this -> get_parent_slug() . '?page=' . BANANAS );
 
 	}
 

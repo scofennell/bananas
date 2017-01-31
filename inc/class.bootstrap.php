@@ -49,11 +49,15 @@ class Bootstrap {
 
 		$bananas = new \stdClass();
 
-		$bananas -> meta                  = new Meta;
 		$bananas -> settings              = new Settings;
+		$bananas -> meta                  = new Meta;
 		$bananas -> enqueue               = new Enqueue;		
 		$bananas -> subsite_control_panel = new Subsite_Control_Panel;
 		$bananas -> dashboard_widget      = new Dashboard_Widget;
+
+		if( is_multisite() ) {
+			$bananas -> network_control_panel = new Network_Control_Panel;
+		}
 
 		return $bananas;
 

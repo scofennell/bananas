@@ -58,7 +58,6 @@ class Settings {
 						'label'       => esc_html__( 'MailChimp API Key', 'bananas' ),
 						'description' => esc_html__( 'Example: 2t3g46fy4hf75k98uytr5432wer3456u-us3', 'bananas' ),
 						'attrs'       => array(
-							'required'    => 'required',
 							'placeholder' => esc_attr__( 'Your MailChimp API Key', 'bananas' ),
 							'pattern'     => '.{30,40}',
 							'title'       => esc_attr__( 'Should be about 36 characters and include your datacenter', 'bananas' ),
@@ -91,6 +90,21 @@ class Settings {
 	}
 
 	/**
+	 * Get the values of our network settings.
+	 * 
+	 * @return array The values of our network settings.
+	 */
+	function get_network_values() {
+
+		if( ! isset( $this -> network_values ) ) {
+			$this -> set_network_values();
+		}
+
+		return $this -> network_values;
+
+	}
+
+	/**
 	 * Store the values of our subsite settings.
 	 */
 	function set_subsite_values() {
@@ -98,6 +112,15 @@ class Settings {
 		$this -> subsite_values = get_option( BANANAS );
 
 	}
+
+	/**
+	 * Store the values of our subsite settings.
+	 */
+	function set_network_values() {
+
+		$this -> network_values = get_site_option( BANANAS );
+
+	}	
 
 	/**
 	 * Get the definition of our subsite settings.
@@ -135,6 +158,53 @@ class Settings {
 		$values = $this -> get_subsite_values();
 
 		return $values[ $section_id ][ $setting_id ];
+
+	}
+
+	/**
+	 * Get the value of a given network setting.
+	 * 
+	 * @param  string $section_id The section.
+	 * @param  string $setting_id The setting.
+	 * @return mixed              The setting value.
+	 */
+	function get_network_value( $section_id, $setting_id ) {
+
+		$values = $this -> get_network_values();
+
+		return $values[ $section_id ][ $setting_id ];
+
+	}
+
+	function update_network_values( $new_values ) {
+
+		$old_values = $this -> get_network_values();	
+
+		if( ! is_array( $old_values ) ) {
+		
+			$out = $new_values;
+		
+		} else {
+		
+			$out = $old_values;
+
+			foreach( $old_values as $old_section_id => $old_settings ) {
+				
+				if( ! isset( $new_values[ $old_section_id ] ) ) { continue; }
+
+				foreach( $old_settings as $old_setting_id => $old_setting_value ) {
+
+					if( ! isset( $new_values[ $old_section_id ][ $old_setting_id ] ) ) { continue; }
+
+					$old_values[ $old_section_id ][ $old_setting_id ] = $new_values[ $old_section_id ][ $old_setting_id ];
+
+				}
+		
+			}
+		
+		}
+		
+		return update_site_option( BANANAS, $out );
 
 	}
 
