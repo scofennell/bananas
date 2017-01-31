@@ -58,7 +58,7 @@ class Settings {
 						'network'     => TRUE,
 						'type'        => 'text',
 						'label'       => esc_html__( 'MailChimp API Key', 'bananas' ),
-						'description' => esc_html__( 'Example: 2t3g46fy4hf75k98uytr5432wer3456u-us3', 'bananas' ),
+						'description' => sprintf( esc_html__( 'Example: %s.', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
 						'attrs'       => array(
 							'placeholder' => esc_attr__( 'Your MailChimp API Key', 'bananas' ),
 							'pattern'     => '.{30,40}',
@@ -66,9 +66,77 @@ class Settings {
 						),
 					),
 
+					// A setting.
+					'list_id' => array(
+						'subsite'     => TRUE,
+						'network'     => TRUE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'List ID', 'bananas' ),
+						'description' => esc_html__( 'Example: 12345-us3.', 'bananas' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'Your MailChimp List ID', 'bananas' ),
+							'title'       => esc_attr__( 'Please choose a list', 'bananas' ),
+						),
+					),					
+
 				),
 
 			),
+
+			// A section.
+			'other_section' => array(
+
+				// The label for this section.
+				'label' => esc_html( 'Other section', 'bananas' ),
+
+				// For subsites?
+				'subsite' => TRUE,
+
+				// For multisite?
+				'network' => TRUE,
+
+				// The settings for this section.
+				'settings' => array(
+
+					// A setting.
+					'other_setting1' => array(
+						'subsite'     => FALSE,
+						'network'     => FALSE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Should not appear anywhere', 'bananas' ),
+						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
+						),
+					),	
+
+					// A setting.
+					'other_setting2' => array(
+						'subsite'     => TRUE,
+						'network'     => FALSE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Should only appeadr on subsite', 'bananas' ),
+						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
+						),
+					),
+
+					// A setting.
+					'other_setting3' => array(
+						'subsite'     => FALSE,
+						'network'     => TRUE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Should only appeadr on network', 'bananas' ),
+						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
+						),
+					),														
+
+				),
+
+			),			
 
 		);
 
@@ -213,6 +281,14 @@ class Settings {
 	function get_network_value( $section_id, $setting_id ) {
 
 		$values = $this -> get_network_values();
+
+		if( ! isset( $values[ $section_id ] ) ) {
+			return FALSE;
+		}
+
+		if( ! isset( $values[ $setting_id ] ) ) {
+			return FALSE;
+		}		
 
 		return $values[ $section_id ][ $setting_id ];
 
