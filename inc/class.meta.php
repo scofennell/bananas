@@ -53,25 +53,7 @@ class Meta {
 	 */
 	function get_api_key() {
 
-		$out = '';
-
-		if( is_multisite() ) {
-
-			$out = $this -> settings -> get_network_value( 'mailchimp_account_setup', 'api_key' );
-
-		} else {
-
-			$subsite_api_key = $this -> settings -> get_subsite_value( 'mailchimp_account_setup', 'api_key' );
-
-			if( ! empty( $subsite_api_key ) ) {
-
-				$out = $subsite_api_key;
-
-			}
-
-		}
-
-		return $out;
+		return $this -> settings -> get_subsite_value( 'mailchimp_account_setup', 'api_key' );
 
 	}
 

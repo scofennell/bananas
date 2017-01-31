@@ -23,8 +23,9 @@ class Network_Control_Panel {
 		add_action( 'network_admin_menu', array( $this, 'add_options_page' ) );
 
 		// Register our options sections.
-		add_action( 'admin_init', array( $this, 'register' ) );
-		add_action( 'admin_init', array( $this, 'handle' ) );
+		add_action( 'admin_init', array( $this, 'handle' ), 1 );
+		add_action( 'admin_init', array( $this, 'register' ), 100 );
+
 
 		// Register our admin notices.
 		add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
