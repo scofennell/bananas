@@ -229,7 +229,7 @@ class Subsite_Control_Panel extends Control_Panel {
 				$section_label,
 
 				// Could provide a cb function here to output some help text, but don't need to.
-				FALSE,
+				array( $this, 'the_section_description' ),
 
 				// Needs to match the first arg in register_setting().
 				BANANAS
@@ -312,6 +312,27 @@ class Subsite_Control_Panel extends Control_Panel {
 			$sanitize_callback
 		
 		);
+
+	}
+
+	function the_section_description( $section ) {
+
+		echo $this -> get_section_description( $section );
+
+	}
+
+	function get_section_description( $section ) {
+
+		$out = '';
+
+		$section_id = $section['id'];
+		$settings_section = $this -> settings -> get_section( $section_id );
+
+		if( isset( $settings_section['description'] ) ) {
+			$out = '<p>' . wp_kses_post( $settings_section['description'] ) . '</p>';
+		}
+
+		return $out;
 
 	}
 

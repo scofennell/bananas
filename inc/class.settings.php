@@ -433,4 +433,12 @@ class Settings {
 
 	}
 
+	function get_section( $section_id ) {
+
+		$settings = $this -> get_settings();
+
+		return $settings[ $section_id ];
+
+	}
+
 }
