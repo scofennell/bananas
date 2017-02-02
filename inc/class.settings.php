@@ -71,13 +71,25 @@ class Settings {
 
 					// A setting.
 					'list_id' => array(
-						'subsite'     => TRUE,
-						'network'     => TRUE,
-						'type'        => 'select',
-						'label'       => esc_html__( 'List', 'bananas' ),
-						'description' => esc_html__( 'Choose a list from your MailChimp Account.', 'bananas' ),
-						'options_cb'  => array( 'Fields', 'get_lists_as_options' ),
-						'attrs'       => array(
+						'subsite'      => TRUE,
+						'network'      => TRUE,
+						'type'         => 'select',
+						'label'        => esc_html__( 'List', 'bananas' ),
+						'description'  => esc_html__( 'Choose a list from your MailChimp Account.', 'bananas' ),
+						'options_cb'   => array( 'Fields', 'get_lists_as_options' ),
+						'subsite_dependencies' => array(
+							array(
+								'Meta',
+								'has_api_key'
+							),
+						),
+						'network_dependencies' => array(
+							array(
+								'Meta',
+								'has_api_key'
+							),
+						),		
+						'attrs'        => array(
 							'placeholder' => esc_attr__( 'Your MailChimp List ID', 'bananas' ),
 							'title'       => esc_attr__( 'Please choose a list', 'bananas' ),
 						),

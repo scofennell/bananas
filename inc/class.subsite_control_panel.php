@@ -239,6 +239,24 @@ class Subsite_Control_Panel extends Control_Panel {
 			// For each setting in this section...
 			foreach( $section['settings'] as $setting_id => $setting ) {
 
+				$failed_deps = array();
+				if( isset( $setting['subsite_dependencies'] ) ) {
+					foreach( $setting['subsite_dependencies'] as $dep ) {
+
+						$dep_class = __NAMESPACE__ . '\\' . $dep[0];
+						$dep_obj = new $dep_class;
+						$dep_method = $dep[1];
+					
+						$dep_result = call_user_func( array( $dep_obj, $dep_method ) );
+						if( is_wp_error( $dep_result ) ) {
+							$failed_deps[]= $dep_result;
+						}
+
+					}
+				}
+				$failed_deps_count = count( $failed_deps );
+				if( ! empty( $failed_deps_count ) ) { continue; }
+
 				// The setting label.
 				$label = $setting['label'];
 				if( $setting['network'] ) {
