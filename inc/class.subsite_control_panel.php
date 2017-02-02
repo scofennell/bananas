@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Subsite_Control_Panel {
+class Subsite_Control_Panel extends Control_Panel {
 
 	function __construct() {
 
@@ -240,7 +240,10 @@ class Subsite_Control_Panel {
 			foreach( $section['settings'] as $setting_id => $setting ) {
 
 				// The setting label.
-				$label    = $setting['label'];
+				$label = $setting['label'];
+				if( $setting['network'] ) {
+					$label = $this -> get_asterisk() . $label;
+				}
 
 				// The cb to draw the input for this setting.
 				$callback = array( $this, 'the_field' );
@@ -303,7 +306,11 @@ class Subsite_Control_Panel {
 	
 		$out = $this -> get_field( $args );
 
-		echo $out;
+		if( is_wp_error( $out ) ) {
+			echo $out -> get_error_message();
+		} else {
+			echo $out;
+		}
 
 	}
 
@@ -319,7 +326,6 @@ class Subsite_Control_Panel {
 		$setting_id = $args['setting_id'];		
 		$setting    = $args['setting'];
 
-		// It's probably a textarea!
 		$type = $setting['type'];
 
 		// The ID for the input, expected by the <label for=''> that get's printed via do_settings_sections().
@@ -337,8 +343,35 @@ class Subsite_Control_Panel {
 
 		$attrs = $this -> get_attrs_from_array( $setting['attrs'] );
 
+		if( isset( $setting['options_cb'] ) ) {
+
+			// Get the options from this CB class.
+			$options_class = __NAMESPACE__ . '\\' . $setting['options_cb'][0];
+
+			// Instantiate the CB class, providing the current value of the setting.
+			$options_obj = new $options_class( $value );
+
+			// Grab the cb method.
+			$options_method = $setting['options_cb'][1];
+
+			// Call the cb method.
+			$options = call_user_func( array( $options_obj, $options_method ) );
+			if( is_wp_error( $options ) ) { return $options; }
+
+		}
+
+		if( $type == 'select' ) {
+
+			$input   = "<select $attrs class='regular-text' id='$id' name='$name'>$options</select>";
+
+		} else {
+
+			$input = "<input $attrs class='regular-text' type='$type' id='$id' name='$name' value='$value'>";
+
+		}
+
 		$out = "
-			<input $attrs class='regular-text' type='$type' id='$id' name='$name' value='$value'>
+			$input
 			<p class='description'>$description</p>
 		";
 

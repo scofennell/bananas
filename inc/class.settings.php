@@ -41,7 +41,10 @@ class Settings {
 			'mailchimp_account_setup' => array(
 
 				// The label for this section.
-				'label' => esc_html( 'MailChimp Account Setup', 'bananas' ),
+				'label' => esc_html__( 'MailChimp Account Setup', 'bananas' ),
+
+				// The description for this section.
+				'description' => esc_html__( 'The section where one can manage the MailChimp account settings.', 'bananas' ),
 
 				// For subsites?
 				'subsite' => TRUE,
@@ -70,9 +73,10 @@ class Settings {
 					'list_id' => array(
 						'subsite'     => TRUE,
 						'network'     => TRUE,
-						'type'        => 'text',
-						'label'       => esc_html__( 'List ID', 'bananas' ),
-						'description' => esc_html__( 'Example: 12345-us3.', 'bananas' ),
+						'type'        => 'select',
+						'label'       => esc_html__( 'List', 'bananas' ),
+						'description' => esc_html__( 'Choose a list from your MailChimp Account.', 'bananas' ),
+						'options_cb'  => array( 'Fields', 'get_lists_as_options' ),
 						'attrs'       => array(
 							'placeholder' => esc_attr__( 'Your MailChimp List ID', 'bananas' ),
 							'title'       => esc_attr__( 'Please choose a list', 'bananas' ),
@@ -408,7 +412,6 @@ class Settings {
 			}
 		
 		}
-
 		
 		$this -> network_values = $out;
 

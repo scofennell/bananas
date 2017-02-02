@@ -28,6 +28,27 @@ class Lists extends Resource {
 	}
 
 	/**
+	 * Get the lists as an ID -> name array.
+	 * 
+	 * @return array The lists as an ID -> name array.
+	 */
+	function get_as_kv() {
+
+		$lists = $this -> get_response();
+		if( is_wp_error( $lists ) ) { return $lists; }
+		$lists = $lists['lists'];
+
+		foreach( $lists as $list ) {
+
+			$out[ $list['id'] ] = $list['name'];
+
+		}
+
+		return $out;
+
+	}
+
+	/**
 	 * Build a bar graph to display subscrber counts.
 	 * 
 	 * @return string A bar graph showing subcriber counts per list.

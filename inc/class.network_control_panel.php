@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Network_Control_Panel {
+class Network_Control_Panel extends Control_Panel {
 
 	function __construct() {
 
@@ -243,7 +243,10 @@ class Network_Control_Panel {
 			foreach( $section['settings'] as $setting_id => $setting ) {
 
 				// The setting label.
-				$label    = $setting['label'];
+				$label = $setting['label'];
+				if( $setting['subsite'] ) {
+					$label = $this -> get_asterisk() . $label;
+				}
 
 				// The cb to draw the input for this setting.
 				$callback = array( $this, 'the_field' );
