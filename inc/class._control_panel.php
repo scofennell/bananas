@@ -151,7 +151,7 @@ abstract class Control_Panel {
 		$text             = esc_html__( 'Submit', 'bananas' );
 		$type             = 'primary';
 		$name             = 'submit';
-		$wrap             = FALSE;
+		$wrap             = TRUE;
 		$other_attributes = array();
 
 		// Grab the submit button.

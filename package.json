@@ -1,0 +1,8 @@
+{
+  "name": "bananas",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-exec": "^0.4.6",
+    "grunt-githooks": "^0.6.0"
+  }
+}
