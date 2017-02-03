@@ -49,8 +49,9 @@ class Bootstrap {
 
 		$bananas = new \stdClass();
 
-		$bananas -> settings              = new Settings;
 		$bananas -> meta                  = new Meta;
+		$bananas -> settings              = new Settings;
+		$bananas -> config                = new Config;
 		$bananas -> enqueue               = new Enqueue;		
 		$bananas -> subsite_control_panel = new Subsite_Control_Panel;
 		$bananas -> dashboard_widget      = new Dashboard_Widget;

@@ -16,9 +16,8 @@ class Call {
 
 		// Grab our plugin-wide helpers.
 		global $bananas;
-		$this -> meta     = $bananas -> meta;
-		$this -> settings = $bananas -> settings;
-
+		$this -> config = $bananas -> config;
+	
 		// Store the args that were passed in.
 		$this -> set_args( $args );
 
@@ -85,7 +84,7 @@ class Call {
 	 */
 	function set_api_key() {
 
-		$this -> api_key = $this -> meta -> get_api_key( 'mailchimp_account_setup', 'api_key' );
+		$this -> api_key = $this -> config -> get_api_key();
 
 	}
 
@@ -300,7 +299,11 @@ class Call {
 
 		$out  = trailingslashit( $this -> get_base() );
 
-		$out .= trailingslashit( $this -> get_endpoint() );
+		if( ! empty( $this -> get_endpoint() ) ) {
+
+			$out .= trailingslashit( $this -> get_endpoint() );
+
+		}
 
 		if( $this -> method == 'GET' ) {
 
@@ -418,7 +421,7 @@ class Call {
 		$method = $this -> get_method();
 		if( $method == 'GET' ) {
 
-			$transient = get_transient( $this -> get_transient_key() );
+			$transient = $this -> get_transient();
 			if( ! empty( $transient ) ) {
 				$this -> response = $transient;
 				return;
@@ -443,7 +446,7 @@ class Call {
 
 		// If it's a GET request, we can store the result as a transient.
 		if( $method == 'GET' ) {
-			set_transient( $this -> get_transient_key(), $result_json, HOUR_IN_SECONDS );
+			$this -> set_transient();
 		}
 		
 	}
@@ -501,5 +504,43 @@ class Call {
 		return $out;
 
 	}
+
+	/**
+	 * An abstraction layer for getting transients in network VS single site.
+	 * 
+	 * @return mixed The transient value.
+	 */
+	function get_transient() {
+
+		if( is_network_admin() ) {
+			$out = get_site_transient( $this -> get_transient_key() );
+		} else {
+			$out = get_transient( $this -> get_transient_key() );	
+		}
+
+		return $out;
+		
+	}
+
+	/**
+	 * An abstraction layer for setting transients in network VS single site.
+	 * 
+	 * @return mixed The result of having set the transient.
+	 */
+	function set_transient() {
+
+		$time  = HOUR_IN_SECONDS;
+		$key   = $this -> get_transient_key();
+		$value = $this -> get_response();
+
+		if( is_network_admin() ) {
+			$out = set_site_transient( $key, $value, $time );
+		} else {
+			$out = set_transient( $key, $value, $time );	
+		}
+
+		return $out;
+		
+	}	
 
 }

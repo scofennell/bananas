@@ -79,13 +79,13 @@ class Settings {
 						'options_cb'   => array( 'Fields', 'get_lists_as_options' ),
 						'subsite_dependencies' => array(
 							array(
-								'Meta',
+								'Config',
 								'has_api_key'
 							),
 						),
 						'network_dependencies' => array(
 							array(
-								'Meta',
+								'Config',
 								'has_api_key'
 							),
 						),		
@@ -209,34 +209,44 @@ class Settings {
 
 		$settings = $this -> get_settings();
 
+		// Start by grabbing the subsite values.
 		$subsite_values = get_option( BANANAS );
 
 		$out = $subsite_values;
 
+		// If we are WPMU...
 		if( is_multisite() ) {
 
+			// Grab the network values.
 			$network_values = $this -> get_network_values();
 
+			// For each section...
 			foreach( $settings as $section_id => $section ) {
 
+				// If this is not an inheritable section, skip it.
 				if( ! $section['network'] ) { continue; }
 				if( ! $section['subsite'] ) { continue; }
 
+				// For each setting...
 				foreach( $section['settings'] as $setting_id => $setting ) {
 
+					// If this is not an inheritable setting, skip it.
 					if( ! $setting['network'] ) { continue; }
 					if( ! $setting['subsite'] ) { continue; }
 
+					// Start by grabbing the subite value.
 					$subsite_val = FALSE;
 					if( isset( $subsite_values[ $section_id ][ $setting_id ] ) ) {
 						$subsite_val = $subsite_values[ $section_id ][ $setting_id ];
 					}
 
+					// Next grab the network value.
 					$network_val = FALSE;
 					if( isset( $network_values[ $section_id ][ $setting_id ] ) ) {
 						$network_val = $network_values[ $section_id ][ $setting_id ];
 					}					
 
+					// If the subsite value is lacking, inherit the network value.
 					if( is_null( $subsite_val ) || ! $subsite_val ) {
 						$out[ $section_id ][ $setting_id ] = $network_val;
 					}	
@@ -381,42 +391,61 @@ class Settings {
 
 	}
 
+	/**
+	 * Update our network values.
+	 * 
+	 * @param  array $new_values The new values.
+	 * @return mixed             A call to update_site_option().
+	 */
 	function update_network_values( $new_values ) {
 
+		// Grab the old values.
 		$old_values = $this -> get_network_values();	
 
+		// If it's not even an array, get rid of it.
 		if( ! is_array( $old_values ) ) {
 		
 			$out = $new_values;
 		
+		// If it is an array...
 		} else {
 		
+			// Start with it.
 			$out = $old_values;
 
+			// For each old value...
 			foreach( $old_values as $old_section_id => $old_settings ) {
 				
+				// If this section is no longer active, skip it.
 				if( ! isset( $new_values[ $old_section_id ] ) ) { continue; }
 
+				// For each old setting...
 				foreach( $old_settings as $old_setting_id => $old_setting_value ) {
 
+					// If this setting is no longer active, toggle it to FALSE.
 					if( ! isset( $new_values[ $old_section_id ][ $old_setting_id ] ) ) {
 
 						$new_values[ $old_section_id ][ $old_setting_id ] = FALSE;
 
 					}
 
+					// Store this section.
 					$out[ $old_section_id ][ $old_setting_id ] = $new_values[ $old_section_id ][ $old_setting_id ];
 
 				}
 		
 			}
 
+			// For each new value...
 			foreach( $new_values as $new_section_id => $new_settings ) {
 				
+				// For each new setting in this section...
 				foreach( $new_settings as $new_setting_id => $new_setting_value ) {
 
-					if( isset( $out[ $new_section_id ][ $new_setting_id ] ) ) { continue; }
+					// If this setting was not provided, skip it.
+					if( ! isset( $out[ $new_section_id ][ $new_setting_id ] ) ) { continue; }
 
+					// Update this setting.
 					$out[ $new_section_id ][ $new_setting_id ] = $new_values[ $new_section_id ][ $new_setting_id ];
 
 				}
@@ -425,14 +454,22 @@ class Settings {
 		
 		}
 		
+		// Update the settings for this page load.
 		$this -> network_values = $out;
 
+		// And update them in the database.
 		$update = update_site_option( BANANAS, $out );
 
 		return $update;
 
 	}
 
+	/**
+	 * Get the definition of a section.
+	 * 
+	 * @param  string $section_id A section ID.
+	 * @return array              The definition of a section.
+	 */
 	function get_section( $section_id ) {
 
 		$settings = $this -> get_settings();

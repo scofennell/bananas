@@ -23,7 +23,7 @@ class Root extends Resource {
 	 */
 	function set_endpoint() {
 
-		$this -> endpoint = '/';
+		$this -> endpoint = '';
 
 	}
 

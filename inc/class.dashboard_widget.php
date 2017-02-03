@@ -16,7 +16,7 @@ class Dashboard_Widget {
 
 		// Grab our plugin-wide helpers.
 		global $bananas;
-		$this -> meta = $bananas -> meta;
+		$this -> config = $bananas -> config;
 
 		$this -> lists = new Lists;
 
@@ -27,11 +27,11 @@ class Dashboard_Widget {
 	/**
 	 * Are we ready to do this widget?
 	 * 
-	 * @return boolean Returns TRUE if we are ready to do this widget, else WP_Error.
+	 * @return mixed Returns TRUE if we are ready to do this widget, else WP_Error.
 	 */
 	function is_setup() {
 
-		return $this -> meta -> has_api_key();
+		return $this -> config -> has_api_key();
 
 	}
 
@@ -60,13 +60,19 @@ class Dashboard_Widget {
 
 	}
 
+	/**
+	 * Get the title of the widget.
+	 * 
+	 * @return string The widget title.
+	 */
 	function get_the_title() {
 
+		// Grab the total number of subscribers account-wide.
 		$root = new Root;
 		$total_subscribers = '<code>' . $root -> get_total_subscribers() . '</code>';
 		
+		// Grab the total number of lists.
 		$total_lists = '<code>' . $this -> lists -> get_total_items() . '</code>';
-		
 
 		$out = sprintf( esc_html__( 'Total Subscribers: %s from %s Lists', 'bananas' ), $total_subscribers, $total_lists );
 

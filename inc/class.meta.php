@@ -12,13 +12,7 @@ namespace Bananas;
 
 class Meta {
 
-	function __construct() {
-
-		global $bananas;
-
-		$this -> settings = $bananas -> settings;
-
-	}
+	function __construct() {}
 
 	/**
 	 * Get the public-facing name for the plugin.
@@ -28,32 +22,6 @@ class Meta {
 	function get_label() {
 
 		return esc_html__( 'Bananas', 'bananas' );
-
-	}
-
-	/**
-	 * Make a test call to the API to see if we have a valid API key.
-	 * 
-	 * @return mixed Returns an http response on success, a wp_error on failure.
-	 */
-	function has_api_key() {
-
-		$call = new call();
-
-		$response = $call -> get_response();
-
-		return $response;
-
-	}
-
-	/**
-	 * Get the API key, preferring the subsite API key, falling back to the network API key.
-	 * 
-	 * @return string The API key. 
-	 */
-	function get_api_key() {
-
-		return $this -> settings -> get_subsite_value( 'mailchimp_account_setup', 'api_key' );
 
 	}
 
