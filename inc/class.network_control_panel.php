@@ -106,10 +106,7 @@ class Network_Control_Panel extends Control_Panel {
 
 		// We made it!  Update the setting.
 		$new_value = $this -> sanitize( $_POST[ BANANAS ] );
-		/*foreach( $new_value as $section_id => $section ) {
-			$new_value[ $section_id ] = array_map( 'sanitize_text_field', $section );
-		}*/
-		
+
 		// Update the settings in the DB.
 		$update_network_values = $this -> settings -> update_network_values( $new_value );
 

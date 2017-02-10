@@ -2,9 +2,7 @@
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
-	//$_tests_dir = '../../../../';
-	$tests_dir = realpath( dirname( ABSPATH ) );
-	//echo 'hello';
+	$_tests_dir = '../../../../';
 }
 
 require_once $_tests_dir . '/includes/functions.php';

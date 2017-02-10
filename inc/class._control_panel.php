@@ -300,7 +300,7 @@ abstract class Control_Panel {
 			// For each setting...
 			foreach( $settings as $k => $v ) {
 
-				// The only tags should be script tags.  Weird, right?
+				// Let's call it good ot just to sanitize text field.
 				$v = sanitize_text_field( $v );
 
 				// Nice!  Pass the cleaned value into the array.

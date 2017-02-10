@@ -51,9 +51,11 @@ class Bootstrap {
 
 		$bananas -> meta                  = new Meta;
 		$bananas -> settings              = new Settings;
+		$bananas -> post_meta_fields      = new Post_Meta_Fields;		
 		$bananas -> config                = new Config;
 		$bananas -> enqueue               = new Enqueue;		
 		$bananas -> subsite_control_panel = new Subsite_Control_Panel;
+		$bananas -> post_meta_box         = new Post_Meta_Box;
 		$bananas -> dashboard_widget      = new Dashboard_Widget;
 
 		if( is_multisite() ) {

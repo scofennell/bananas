@@ -57,6 +57,7 @@ class Lists extends Resource {
 
 		// Get the lists.
 		$lists = $this -> get_response();
+		if( is_wp_error( $lists ) ) { return $lists; }
 		$lists = $lists['lists'];
 
 		// Set up the args for our graph.
