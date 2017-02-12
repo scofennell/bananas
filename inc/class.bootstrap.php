@@ -57,6 +57,7 @@ class Bootstrap {
 		$bananas -> subsite_control_panel = new Subsite_Control_Panel;
 		$bananas -> post_meta_box         = new Post_Meta_Box;
 		$bananas -> dashboard_widget      = new Dashboard_Widget;
+		$bananas -> widget                = new Widget;
 
 		if( is_multisite() ) {
 			$bananas -> network_control_panel = new Network_Control_Panel;
