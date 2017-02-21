@@ -142,9 +142,10 @@ class Settings {
 					'other_setting0' => array(
 						'subsite'     => TRUE,
 						'network'     => TRUE,
-						'type'        => 'text',
+						'type'        => 'checkbox_group',
 						'label'       => esc_html__( 'Should appear on both (other_setting0)', 'bananas' ),
 						'description' => sprintf( esc_html__( 'for demo only', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
+						'options_cb'  => array( 'Fields', 'get_pages_as_checkboxes' ),
 						'attrs'       => array(
 							'placeholder' => esc_attr__( 'for demo only', 'bananas' ),
 						),

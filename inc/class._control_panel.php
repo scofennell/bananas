@@ -196,6 +196,8 @@ abstract class Control_Panel {
 		$setting_id = $args['setting_id'];		
 		$setting    = $args['setting'];
 
+		$class = sanitize_html_class( __CLASS__ . '-' . __FUNCTION__ );
+
 		// The input type.
 		$type = $setting['type'];
 
@@ -211,7 +213,19 @@ abstract class Control_Panel {
 		// The value for this setting.
 		$value = '';
 		if( isset( $this -> values[ $section_id ][ $setting_id ] ) ) {
-			$value = esc_attr( $this -> values[ $section_id ][ $setting_id ] );
+			
+			$value = $this -> values[ $section_id ][ $setting_id ];
+
+			if( is_scalar( $value ) ) {
+			
+				$value = esc_attr( $value );
+			
+			} elseif( is_array( $value ) ) {
+			
+				$value = array_map( 'esc_attr', $value );
+			
+			}
+
 		}
 
 		// Other various attributes.
@@ -224,7 +238,7 @@ abstract class Control_Panel {
 			$options_class = __NAMESPACE__ . '\\' . $setting['options_cb'][0];
 
 			// Instantiate the CB class, providing the current value of the setting.
-			$options_obj = new $options_class( $value );
+			$options_obj = new $options_class( $value, $id, $name );
 
 			// Grab the cb method.
 			$options_method = $setting['options_cb'][1];
@@ -238,7 +252,11 @@ abstract class Control_Panel {
 		// Handle selects.
 		if( $type == 'select' ) {
 
-			$input   = "<select $attrs class='regular-text' id='$id' name='$name'>$options</select>";
+			$input = "<select $attrs class='regular-text' id='$id' name='$name'>$options</select>";
+
+		} elseif( $type == 'checkbox_group' ) {
+
+			$input = "<div class='$class-$type'>$options</div>";
 
 		// Handle any other kind of input.
 		} else {
@@ -300,8 +318,12 @@ abstract class Control_Panel {
 			// For each setting...
 			foreach( $settings as $k => $v ) {
 
-				// Let's call it good ot just to sanitize text field.
-				$v = sanitize_text_field( $v );
+				// Let's call it good to just to sanitize text field.
+				if( is_scalar( $v ) ) {
+					$v = sanitize_text_field( $v );
+				} elseif( is_array( $v ) ) {
+					$v = array_map( 'sanitize_text_field', $v );
+				}
 
 				// Nice!  Pass the cleaned value into the array.
 				$clean[ $section ][ $k ] = $v;

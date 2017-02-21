@@ -6,6 +6,8 @@
  * @package WordPress
  * @subpackage Bananas
  * @since Bananas 0.1
+ * @todo add support for checkbox groups.
+ * @todo implement oauth flow.
  * 
  * Plugin Name: Bananas
  * Plugin URI: http://www.scottfennell.com

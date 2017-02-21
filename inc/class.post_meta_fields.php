@@ -54,6 +54,14 @@ class Post_Meta_Fields {
 						'checkbox_value' => 1,
 					),
 
+					// A setting.
+					'b_setting' => array(
+						'type'        => 'checkbox_group',
+						'label'       => esc_html__( 'Check boxes?', 'bananas' ),
+						'description' => esc_html__( 'When these boxes are checked, you have checked these boxes.', 'bananas' ),
+						'options_cb'  => array( 'Fields', 'get_pages_as_checkboxes' ),
+					),		
+
 				),
 
 			),	

@@ -160,7 +160,17 @@ class Post_Meta_Box {
 				$value = '';
 				if( isset( $values[ $section_id ] ) ) {
 					if( isset( $values[ $section_id ][ $setting_id ] ) ) {
-						$value = esc_attr( $values[ $section_id ][ $setting_id ] );
+						$value = $values[ $section_id ][ $setting_id ];
+
+						if( is_scalar( $value ) ) {
+
+							$value = esc_attr( $value );
+
+						} elseif( is_array( $value ) ) {
+
+							$value = array_map( 'esc_attr', $value );
+
+						}
 					}
 				}
 
@@ -232,6 +242,24 @@ class Post_Meta_Box {
 			$attrs = $this -> fields -> get_attrs_from_array( $setting['attrs'] );
 		}
 
+		// Maybe get some options for this setting.
+		if( isset( $setting['options_cb'] ) ) {
+
+			// Get the options from this CB class.
+			$options_class = __NAMESPACE__ . '\\' . $setting['options_cb'][0];
+
+			// Instantiate the CB class, providing the current value of the setting.
+			$options_obj = new $options_class( $value, $id, $name );
+
+			// Grab the cb method.
+			$options_method = $setting['options_cb'][1];
+
+			// Call the cb method.
+			$options = call_user_func( array( $options_obj, $options_method ) );
+			if( is_wp_error( $options ) ) { return $options; }
+
+		}
+
 		// The type of input.
 		$type = $setting['type'];
 		
@@ -249,6 +277,15 @@ class Post_Meta_Box {
 				<div id='$id-wrap'>
 					<input $attrs $checked class='' type='$type' id='$id' name='$name' value='$checkbox_value'>
 					<label for='$id'>$setting_label</label>
+					$setting_description
+				</div>
+			";
+
+		} elseif( $type == 'checkbox_group' ) {
+
+			$out = "
+				<div id='$id-wrap'>
+					$options
 					$setting_description
 				</div>
 			";
@@ -361,8 +398,16 @@ class Post_Meta_Box {
 			// For each setting...
 			foreach( $settings as $k => $v ) {
 
-				// Let's call it good ot just to sanitize text field.
-				$v = sanitize_text_field( $v );
+				// Let's call it good to just to sanitize text field.
+				if( is_scalar( $v ) ) {
+			
+					$v = sanitize_text_field( $v );
+			
+				} elseif( is_array( $v ) ) {
+			
+					$v = array_map( 'sanitize_text_field', $v );
+			
+				}
 
 				// Nice!  Pass the cleaned value into the array.
 				$clean[ $section ][ $k ] = $v;
