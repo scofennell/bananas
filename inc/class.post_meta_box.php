@@ -12,6 +12,8 @@ namespace Bananas;
 
 class Post_Meta_Box {
 
+	use Form;
+
 	function __construct() {
 
 		// Grab our plugin-wide helpers.
@@ -236,12 +238,6 @@ class Post_Meta_Box {
 		// Name the setting so it will be saved as an array.
 		$name = BANANAS . '[' . $section_id . ']' .  '[' . $setting_id . ']';
 
-		// Other various attributes.
-		$attrs = '';
-		if( isset( $setting['attrs'] ) ) {
-			$attrs = $this -> fields -> get_attrs_from_array( $setting['attrs'] );
-		}
-
 		// Maybe get some options for this setting.
 		if( isset( $setting['options_cb'] ) ) {
 
@@ -375,48 +371,6 @@ class Post_Meta_Box {
 		update_post_meta( $post_id, BANANAS, $posted_data );
 
 		return $post_id;
-
-	}
-
-	/**
-	 * Our sanitization function for out meta box.
-	 * 
-	 * @param  array  $dirty_sections The form values, dirty.
-	 * @return array  The form values, clean.
-	 */
-	public function sanitize( $dirty = array() ) {
-
-		// Grab the definition of all of our settings.
-		$meta_fields = $this -> meta_fields;
-
-		// Will hold cleaned values.
-		$clean = array();
-
-		// For each section of settings...
-		foreach( $dirty as $section => $settings ) {
-
-			// For each setting...
-			foreach( $settings as $k => $v ) {
-
-				// Let's call it good to just to sanitize text field.
-				if( is_scalar( $v ) ) {
-			
-					$v = sanitize_text_field( $v );
-			
-				} elseif( is_array( $v ) ) {
-			
-					$v = array_map( 'sanitize_text_field', $v );
-			
-				}
-
-				// Nice!  Pass the cleaned value into the array.
-				$clean[ $section ][ $k ] = $v;
-
-			}
-	
-		}
-
-		return $clean;
 
 	}
 

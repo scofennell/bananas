@@ -12,6 +12,8 @@ namespace Bananas;
 
 class Widget extends \WP_Widget {
 
+	use Form;
+
 	function __construct() {
 
 		// Grab our plugin-wide helpers.
@@ -129,10 +131,6 @@ class Widget extends \WP_Widget {
 	 * @param array $old_instance The previous options.
 	 */
 	public function update( $new_instance, $old_instance ) {
-	
-		// Upon saving settings, we dump our transients.
-		$cache  = new Cache;
-		$cache -> delete();
 
 		return $this -> sanitize( $new_instance );
 
@@ -293,37 +291,6 @@ class Widget extends \WP_Widget {
 		);
 
 		return $settings;
-
-	}
-
-	/**
-	 * Our sanitize_callback for register_setting().
-	 * 
-	 * @param  array  $dirty The form values, dirty.
-	 * @return array  The form values, clean.
-	 */
-	public function sanitize( $dirty = array() ) {
-
-		// Will hold cleaned values.
-		$clean = array();
-
-		// For each section of settings...
-		foreach( $dirty as $section => $settings ) {
-
-			// For each setting...
-			foreach( $settings as $k => $v ) {
-
-				// Let's call it good ot just to sanitize text field.
-				$v = sanitize_text_field( $v );
-
-				// Nice!  Pass the cleaned value into the array.
-				$clean[ $section ][ $k ] = $v;
-
-			}
-	
-		}
-
-		return $clean;
 
 	}
 

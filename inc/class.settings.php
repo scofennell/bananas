@@ -60,14 +60,42 @@ class Settings {
 						'subsite'     => TRUE,
 						'network'     => TRUE,
 						'type'        => 'text',
-						'label'       => esc_html__( 'MailChimp API Key', 'bananas' ),
+						'label'       => esc_html__( 'API Key', 'bananas' ),
 						'description' => sprintf( esc_html__( 'Example: %s.', 'bananas' ), '<code>2t3g46fy4hf75k98uytr5432wer3456u-us3</code>' ),
 						'attrs'       => array(
-							'placeholder' => esc_attr__( 'Your MailChimp API Key', 'bananas' ),
+							'placeholder' => esc_attr__( 'Your API key', 'bananas' ),
 							'pattern'     => '.{30,40}',
 							'title'       => esc_attr__( 'Should be about 36 characters and include your datacenter', 'bananas' ),
 						),
 					),
+
+					// A setting.
+					'client_id' => array(
+						'subsite'     => TRUE,
+						'network'     => TRUE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Client ID', 'bananas' ),
+						'description' => sprintf( esc_html__( 'Example: %s.', 'bananas' ), '<code>749503836365</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'Your client ID', 'bananas' ),
+							'pattern'     => '.{8,16}',
+							'title'       => esc_attr__( 'Should be about 12 characters', 'bananas' ),
+						),
+					),
+
+					// A setting.
+					'client_secret' => array(
+						'subsite'     => TRUE,
+						'network'     => TRUE,
+						'type'        => 'text',
+						'label'       => esc_html__( 'Client Secret', 'bananas' ),
+						'description' => sprintf( esc_html__( 'Example: %s.', 'bananas' ), '<code>2r4t5y6u7i8o38f5f03cdd728a969d62c5cacfeft75y3h56sy</code>' ),
+						'attrs'       => array(
+							'placeholder' => esc_attr__( 'Your client secret', 'bananas' ),
+							'pattern'     => '.{40,60}',
+							'title'       => esc_attr__( 'Should be about 50 characters and include your datacenter', 'bananas' ),
+						),
+					),										
 
 					// A setting.
 					'list_id' => array(
@@ -75,7 +103,7 @@ class Settings {
 						'network'      => TRUE,
 						'type'         => 'select',
 						'label'        => esc_html__( 'List', 'bananas' ),
-						'description'  => esc_html__( 'Choose a list from your MailChimp Account.', 'bananas' ),
+						'description'  => esc_html__( 'Choose a list from your account.', 'bananas' ),
 						'options_cb'   => array( 'Fields', 'get_lists_as_options' ),
 						'subsite_dependencies' => array(
 							array(
@@ -90,7 +118,7 @@ class Settings {
 							),
 						),		
 						'attrs'        => array(
-							'placeholder' => esc_attr__( 'Your MailChimp List ID', 'bananas' ),
+							'placeholder' => esc_attr__( 'Your list ID', 'bananas' ),
 							'title'       => esc_attr__( 'Please choose a list', 'bananas' ),
 						),
 					),					
