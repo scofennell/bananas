@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Network_Control_Panel extends Control_Panel {
+class NetworkControlPanel extends ControlPanel {
 
 	function __construct() {
 

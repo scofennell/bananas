@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-abstract class Control_Panel {
+abstract class ControlPanel {
 
 	use Form;
 

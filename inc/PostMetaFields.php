@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Post_Meta_Fields {
+class PostMetaFields {
 
 	function __construct() {
 

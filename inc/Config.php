@@ -26,7 +26,7 @@ class Config {
 	 */
 	function has_api_key() {
 
-		$call = new call();
+		$call = new Call();
 
 		$response = $call -> get_response();
 

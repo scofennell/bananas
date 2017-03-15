@@ -35,9 +35,6 @@ if( ! defined( 'ABSPATH' ) ) { exit; }
 if( defined( 'BANANAS' ) ) { exit; }
 if( isset( $bananas ) ) { exit; }
 
-// Our master plugin object, which will own instances of various classes in our plugin.
-$bananas = FALSE;
-
 // A slug for our plugin.
 define( 'BANANAS', 'bananas' );
 
@@ -51,5 +48,38 @@ define( 'BANANAS_PATH', trailingslashit( plugin_dir_path( BANANAS_FILE ) ) );
 // A constant to define the urls to our plugin folders.
 define( 'BANANAS_URL', trailingslashit( plugin_dir_url( BANANAS_FILE ) ) );
 
-// A class for loading our plugin files.
-require_once( BANANAS_PATH . 'inc/class.bootstrap.php' );
+
+// Our master plugin object, which will own instances of various classes in our plugin.
+$bananas = new \stdClass();
+$bananas -> bootstrap = 'Bananas' . '\Bootstrap';
+
+spl_autoload_register( 'bananas_autoload' );
+
+function bananas_autoload( $class ) {
+
+	$prefix = 'Bananas' . '\\';
+
+	$base_dir = BANANAS_PATH . 'inc/';
+	
+	$len = strlen( $prefix );
+	
+	$strncmp = strncmp( $prefix, $class, $len );
+
+	if( $strncmp !== 0 ) {
+
+		return;
+
+	}
+
+	$relative_class = substr( $class, $len );
+	$file = $base_dir . str_replace( '\\', '', $relative_class ) . '.php';
+	
+	if( file_exists( $file ) ) {
+
+		require_once( $file );
+
+	}
+
+}
+
+new $bananas -> bootstrap;

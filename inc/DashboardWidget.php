@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Dashboard_Widget {
+class DashboardWidget {
 
 	function __construct() {
 

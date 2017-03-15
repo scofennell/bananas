@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Subsite_Control_Panel extends Control_Panel {
+class SubsiteControlPanel extends ControlPanel {
 
 	function __construct() {
 

@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Single_List extends Resource {
+class SingleList extends Resource {
 
 	function __construct( string $id ) {
 

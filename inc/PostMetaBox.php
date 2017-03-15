@@ -10,7 +10,7 @@
 
 namespace Bananas;
 
-class Post_Meta_Box {
+class PostMetaBox {
 
 	use Form;
 
