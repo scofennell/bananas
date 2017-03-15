@@ -12,7 +12,7 @@ namespace Bananas;
 
 abstract class Tests extends \WP_UnitTestCase {
 
-	public function __construct() {
+	public function setUp() {
 
 		$new_value = array(
 			'mailchimp_account_setup' => array(
